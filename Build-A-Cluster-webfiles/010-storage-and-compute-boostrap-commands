@@ -1,0 +1,25 @@
+# install puppet repository
+yum install -y http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
+
+# install puppet, subversion and vim
+yum -y install puppet vim subversion
+
+# remove default puppet configs
+rm -rf /etc/puppet
+
+# checkout puppet svn to /etc/puppet
+svn co https://LOCAL_HEADNODE_IP/puppet /etc/
+
+# Flush iptables
+iptables -F
+
+# Add ip addresss for storagenodeip, shortname for storage node and reverse dns
+# for storage
+vim /etc/puppet/manifests/site.pp
+svn ci /etc/puppet/
+
+# apply the puppet configuration
+puppet apply /etc/puppet/manifests/site.pp
+
+# reboot for selinux to take effect
+reboot

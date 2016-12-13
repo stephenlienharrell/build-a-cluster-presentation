@@ -1,0 +1,35 @@
+
+class base_cluster {
+
+}
+
+class head_node {
+
+}
+
+class storage_node {
+
+}
+
+class compute_node {
+
+}
+
+# head node
+node 'head.cluster' {
+    include head_node
+    include base_cluster
+}
+
+# storage node
+node 'storage.cluster' {
+    include storage_node
+    include base_cluster
+}
+
+# compute nodes
+node  'compute1.cluster', 'compute2.cluster' {
+    include compute_node
+    include base_cluster
+}
+

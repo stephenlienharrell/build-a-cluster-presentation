@@ -1,0 +1,27 @@
+class base_cluster {
+
+##### START
+  class { 'rsyslog::client':
+    remote_type    => 'tcp',
+    server         => 'head.cluster',
+  }
+##### END
+
+}
+
+
+class head_node {
+
+##### START
+  file {'/var/log/multi/':
+    ensure => 'directory',
+    before => Class['rsyslog::server'],
+  }
+
+  class { 'rsyslog::server':
+    server_dir => '/var/log/multi/',
+  }
+##### END
+
+}
+

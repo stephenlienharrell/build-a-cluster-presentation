@@ -1,0 +1,71 @@
+class base_cluster {
+
+##### START
+  # order of operations to prevent "no dns" race condition
+  Class['dnsmasq'] -> Class['resolv_conf'] -> Exec['set-hostname-to-dns']
+
+  class { 'dnsmasq':
+    interface         => 'lo',
+    listen_address    => '127.0.0.1',
+    domain            => 'cluster',
+    port              => '53',
+    expand_hosts      => false,
+    enable_tftp       => false,
+    domain_needed     => true,
+    bogus_priv        => true,
+    no_negcache       => true,
+    no_hosts          => true,
+    cache_size        => 5000,
+  }
+
+  dnsmasq::dnsserver { 'dns':
+    ip => '8.8.8.8',
+  }
+
+  dnsmasq::address { "head.cluster":
+    ip  => $headnodeip,
+  }
+
+  dnsmasq::ptr { "24.7.31.172.in-addr.arpa.":
+    value  => 'head.cluster',
+  }
+
+  dnsmasq::address { "storage.cluster":
+    ip  => $storagenodeip,
+  }
+
+  dnsmasq::ptr { "x.x.31.172.in-addr.arpa.":
+    value  => 'storage.cluster',
+  }
+
+  dnsmasq::address { "compute1.cluster":
+    ip  => $computeoneip,
+  }
+
+  dnsmasq::ptr { "y.y.31.172.in-addr.arpa.":
+    value  => 'compute1.cluster',
+  }
+
+  dnsmasq::address { "compute2.cluster":
+    ip  => $computetwoip,
+  }
+
+  dnsmasq::ptr { "z.z.31.172.in-addr.arpa.":
+    value  => 'compute2.cluster',
+  }
+
+  class { 'resolv_conf':
+    nameservers => ['127.0.0.1'],
+    searchpath  => ['cluster'],
+  }
+
+  # reset the hostname using our new dnsmasq names
+  exec { "set-hostname-to-dns":
+    # this sets the hostname to the dig name of the ip address on eth0 and without the period at the end
+    command => 'hostname $(dig +short -x `hostname -I` | sed "s/\.\+$//")',
+  }
+
+##### END
+
+}
+

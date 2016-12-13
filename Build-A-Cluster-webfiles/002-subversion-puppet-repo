@@ -1,0 +1,34 @@
+class head_node {
+
+#### START
+
+  # setup apache module
+  class { 'apache':
+    default_confd_files => false,
+    purge_configs => false,
+  }
+  class { 'apache::mod::dav_svn': }
+
+  # configure subversion vhost
+  apache::vhost { 'headnode.internal':
+    port => 443,
+    docroot => '/var/www/html/',
+    ssl => true,
+    ssl_cert => '/etc/httpd/ssl/apache.crt',  
+    ssl_key  => '/etc/httpd/ssl/apache.key',
+    custom_fragment => '
+      <Location /puppet >
+        AuthType Basic
+        AuthName "Puppet Cluster Repository"
+        AuthUserFile "/etc/httpd/auth_user_file"
+        Require valid-user
+        DAV svn
+        SVNPath /var/svn/puppet/
+      </Location>'
+  }
+
+#### END
+
+}
+
+

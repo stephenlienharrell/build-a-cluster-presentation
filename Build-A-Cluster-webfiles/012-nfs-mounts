@@ -1,0 +1,54 @@
+
+#### START
+$storagenodeip='storage node ip here'
+#### END
+
+class head_node {
+
+#### START
+  # mount the shared homes and apps
+  mounts { 'storage server home':
+    ensure => present,
+    source => "${storagenodeip}:/home",
+    dest   => '/home',
+    type   => 'nfs',
+    opts   => 'nofail,defaults,vers=3,rw,noatime',
+  }
+
+  mounts { 'storage server apps':
+    ensure => present,
+    source => "${storagenodeip}:/apps",
+    dest   => '/apps',
+    type   => 'nfs',
+    opts   => 'nofail,defaults,vers=3,rw,noatime',
+    require => File['/apps'],
+  }
+
+#### END
+}
+
+
+class compute_node {
+
+#### START
+  # mount the shared homes and apps
+  mounts { 'storage server home':
+    ensure => present,
+    source => "${storagenodeip}:/home",
+    dest   => '/home',
+    type   => 'nfs',
+    opts   => 'nofail,defaults,vers=3,rw,noatime',
+  }
+
+  mounts { 'storage server apps':
+    ensure => present,
+    source => "${storagenodeip}:/apps",
+    dest   => '/apps',
+    type   => 'nfs',
+    opts   => 'nofail,defaults,vers=3,rw,noatime',
+    require => File['/apps'],
+  }
+
+#### END
+
+}

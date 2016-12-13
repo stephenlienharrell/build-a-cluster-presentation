@@ -1,0 +1,33 @@
+class compute_node {
+
+  file { '/var/spool/torque/mom_priv/config':
+    content => "\$pbsserver head
+\$usecp *:/home /home
+
+##### START
+\$node_check_script /usr/sbin/nhc
+\$node_check_interval jobstart
+\$down_on_error 1\n",
+##### END
+    require => Package['torque-client'],
+    notify  => Service["pbs_mom"]
+  }
+
+##### START
+  package { 'warewulf-nhc':
+    ensure => 'installed',
+    source => 'http://warewulf.lbl.gov/downloads/repo/rhel6/warewulf-nhc-1.3-1.el6.noarch.rpm',
+    provider => 'rpm',
+  }
+
+  file { '/etc/nhc/nhc.conf':
+    content => "/./ || check_fs_mount_rw /
+ *  || check_ps_daemon sshd root\n
+ *  || check_hw_physmem 1024 1073741824\n
+ *  || check_hw_physmem_free 1\n",
+    require => Package['warewulf-nhc'],
+  }
+##### END
+
+}
+

@@ -1,0 +1,87 @@
+class base_cluster {
+
+#### START
+  ### Torque
+  package { 'libxml2':
+    ensure => present,
+  }
+
+  package { 'torque':
+    ensure => 'installed',
+    source => 'http://web.rcac.purdue.edu/~sharrell/buildacluster/torque-4.1.7-1.adaptive.el6.x86_64.rpm',
+    provider => 'rpm',
+  }
+
+#### END
+}
+
+class head_node {
+
+#### START
+  package { 'torque-scheduler':
+    ensure => 'installed',
+    source => 'http://web.rcac.purdue.edu/~sharrell/buildacluster/torque-scheduler-4.1.7-1.adaptive.el6.x86_64.rpm',
+    provider => 'rpm',
+    require => Package['torque']
+  }
+
+  package { 'torque-server':
+    ensure => 'installed',
+    source => 'http://web.rcac.purdue.edu/~sharrell/buildacluster/torque-server-4.1.7-1.adaptive.el6.x86_64.rpm',
+    provider => 'rpm',
+    require => [Package['torque'], File['/var/spool/torque/checkpoint']]
+  }
+
+  service { "pbs_server":
+#    ensure  => "running",
+    enable  => "true",
+    require => Package["torque-server"],
+  }
+
+  service { "pbs_sched":
+#    ensure  => "running",
+    enable  => "true",
+    require => Package["torque-scheduler"],
+  }
+
+  file { '/var/spool/torque/server_priv/nodes':
+    content => "compute1.cluster np=1\ncompute2.cluster np=1\n",
+    require => Package['torque-server'],
+    notify => Service['pbs_server'],
+  }
+
+  file { '/var/spool/torque/checkpoint/':
+    ensure => 'directory',
+    recurse => true,
+  }
+
+#### END
+}
+
+class compute_node {
+
+#### START
+  package { 'torque-client':
+    ensure => 'installed',
+    source => 'http://web.rcac.purdue.edu/~sharrell/buildacluster/torque-client-4.1.7-1.adaptive.el6.x86_64.rpm',
+    provider => 'rpm',
+    require => Package['torque']
+  }
+
+  service { "pbs_mom":
+    ensure  => "running",
+    enable  => "true",
+    require => Package["torque-client"],
+  }
+
+  file { '/var/spool/torque/mom_priv/config':
+    content => "\$pbsserver head
+\$usecp *:/home /home\n",
+    require => Package['torque-client'],
+    notify  => Service["pbs_mom"]
+  }
+#### END
+}
+
+
+

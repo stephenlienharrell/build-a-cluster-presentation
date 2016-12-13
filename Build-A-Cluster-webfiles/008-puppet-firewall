@@ -1,0 +1,67 @@
+
+#### START
+# set ips for all machines in the cluster
+$headnodeip='172.31.7.24'
+$storagenodeip='127.0.0.2'
+$computeoneip='127.0.0.3'
+$computetwoip='127.0.0.4'
+#### END
+
+class base_cluster {
+
+#### START
+  resources { "firewall":
+    purge => true
+  }
+  class { 'my_fw': }
+  class { 'firewall': }
+
+  # allow the all of the nodes to connect to each other
+  # this will open every machine's firewall up to the others
+  firewall { '003 INPUT allow head ip':
+      chain => 'INPUT',
+      action => 'accept',
+      proto => 'all',
+      source => "${headnodeip}/32",
+  }
+
+  firewall { '004 INPUT allow storage ip':
+      chain => 'INPUT',
+      action => 'accept',
+      proto => 'all',
+      source => "${storagenodeip}/32",
+  }
+
+  firewall { '005 INPUT allow compute1 ip':
+      chain => 'INPUT',
+      action => 'accept',
+      proto => 'all',
+      source => "${computeoneip}/32",
+  }
+
+  firewall { '006 INPUT allow compute2 ip':
+      chain => 'INPUT',
+      action => 'accept',
+      proto => 'all',
+      source => "${computetwoip}/32",
+  }
+
+#### END
+
+}
+
+class head_node {
+
+#### START
+  # allow anyone to be able to access https (puppet svn)
+  firewall { '100 allow https access':
+    state => ['NEW'],
+    dport   => 443,
+    proto  => tcp,
+    action => accept,
+  }
+#### END
+
+}
+
+

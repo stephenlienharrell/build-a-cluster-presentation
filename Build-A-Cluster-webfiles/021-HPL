@@ -1,0 +1,27 @@
+# download and untar hpl
+wget http://www.web.rcac.purdue.edu/~sharrell/buildacluster/hpl-2.1.tar.gz
+tar xfvz hpl-2.1.tar.gz
+mv hpl-2.1 hpl
+
+# load openmpi module
+module load openmpi
+
+# use a known working makefile
+cd hpl
+cp setup/Make.Linux_PII_CBLAS_gm ./
+
+# Edit the makefile to set correct LAdir and LAlib paths
+# LAdir = /apps/openblas-0.2.10/lib/
+# LAlib  = $(LAdir)/libopenblas.a 
+vim Make.Linux_PII_CBLAS_gm
+
+# Compile HPL
+make arch=Linux_PII_CBLAS_gm
+
+# Edit HPL.dat 
+# 1 1 1 Ps
+# 1 1 1 Qs
+vim bin/Linux_PII_CBLAS_gm/HPL.dat
+
+# run HPL (change the absolute path to match the proper login)
+mpiexec -prefix /apps/openmpi-1.7.5/ -np 2 -machinefile $PBS_NODEFILE /home/sharrell/hpl/bin/Linux_PII_CBLAS_gm/xhpl

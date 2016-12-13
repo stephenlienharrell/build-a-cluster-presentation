@@ -1,0 +1,28 @@
+# su to the created user
+su login_user
+
+# Start an interactive job
+qsub -I -l nodes=2
+
+# Generate ssh keys for login user
+ssh-keygen
+cp ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
+
+# Pull down the c program
+wget http://web.rcac.purdue.edu/~sharrell/buildacluster/pi.c
+
+# check that the modules we need are available
+module avail
+
+# load the openmpi module
+module load openmpi
+
+# compile pi.c
+mpicc pi.c -o pi
+
+# test pi
+./pi
+
+# Execute the pi with mpiexec across the nodes (make sure to subsititue the correct path)
+mpiexec -prefix /apps/openmpi-1.7.5/ -machinefile $PBS_NODEFILE /home/sharrell/pi
+

@@ -1,0 +1,27 @@
+class base_cluser {
+
+  #### START
+  file { "/apps":
+    ensure => "directory",
+  }
+  #### END
+}
+
+
+class storage_node {
+
+  #### START
+  include nfs::server
+  nfs::server::export{ '/home/':
+    ensure  => 'mounted',
+    clients => '172.31.0.0/16(rw,insecure,async,no_root_squash) localhost(rw)',
+  }
+
+  nfs::server::export{ '/apps/':
+    ensure  => 'mounted',
+    clients => '172.31.0.0/16(rw,insecure,async,no_root_squash) localhost(rw)',
+    require => File['/apps']
+  }
+  #### END
+
+}

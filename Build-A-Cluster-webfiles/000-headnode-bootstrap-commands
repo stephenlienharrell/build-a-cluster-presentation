@@ -1,0 +1,28 @@
+# ssh into the node
+ssh -i AWSKey.pem root@aws-ip
+
+# install puppet repository
+yum -y install http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
+
+# install puppet, git, subversion, apache with mod ssl and vim
+yum -y install puppet git mod_ssl vim subversion
+
+# install puppet modules we will be using throughout the setup
+for package in puppetlabs-apache puppetlabs-firewall spiette-selinux AlexCline-mounts torrancew-account saz-resolv_conf saz-rsyslog petems-swap_file; do puppet module install $package;done
+git clone https://github.com/rlex/puppet-dnsmasq.git /etc/puppet/modules/dnsmasq
+git clone https://github.com/haraldsk/puppet-module-nfs.git /etc/puppet/modules/nfs
+
+# generate certificates for our apache install
+mkdir /etc/httpd/ssl
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/httpd/ssl/apache.key -out /etc/httpd/ssl/apache.crt
+
+# create user for subversion install
+htpasswd -c /etc/httpd/auth_user_file root
+chown apache:apache /etc/httpd/auth_user_file 
+
+# create subversion repo
+mkdir /var/svn
+svnadmin create /var/svn/puppet/
+
+# create directory for puppet configs
+mkdir /etc/puppet/manifests

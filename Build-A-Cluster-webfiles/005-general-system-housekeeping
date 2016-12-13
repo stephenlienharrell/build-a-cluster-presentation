@@ -1,0 +1,48 @@
+
+#### START
+Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ] }
+#### END
+
+class base_cluster {
+
+#### START
+  include swap_file
+
+  class { 'selinux':
+    mode => 'permissive',
+  }
+
+  package { 'bind-utils':
+    ensure => present,
+  }
+
+  package { 'wget':
+    ensure => present,
+  }
+
+  package { 'lsof':
+    ensure => present,
+  }
+
+  package { 'mlocate':
+    ensure => present,
+  }
+
+  package { 'strace':
+    ensure => present,
+  }
+
+  package { 'telnet':
+    ensure => present,
+  }
+
+  package { 'nc':
+    ensure => present,
+  }
+
+  package { 'screen':
+    ensure => present,
+  }
+#### END
+
+}

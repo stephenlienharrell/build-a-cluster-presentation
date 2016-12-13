@@ -1,0 +1,10 @@
+# change into the apps directory
+cd /apps
+
+# get the two files
+wget http://web.rcac.purdue.edu/~sharrell/buildacluster/openblas-0.2.10.tar.gz
+wget http://web.rcac.purdue.edu/~sharrell/buildacluster/openmpi-1.7.5.tar.gz
+
+# untar them into the shared app space
+tar xfvz openblas-0.2.10.tar.gz
+tar xfvz openmpi-1.7.5.tar.gz

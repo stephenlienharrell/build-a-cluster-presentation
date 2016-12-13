@@ -1,0 +1,5 @@
+# Allow HTTPD to access puppet repository in SELinux
+chcon -R -h -t httpd_sys_content_t /var/svn/puppet 
+
+# Allow apache user to read and write to puppet subversion
+chown -R apache:apache /var/svn/puppet

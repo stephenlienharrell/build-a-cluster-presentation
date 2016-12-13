@@ -1,0 +1,67 @@
+class base_cluster {
+
+##### START
+  package { 'environment-modules':
+    ensure => present,
+  }
+
+  package { 'gcc-c++':
+    ensure => present,
+  }
+
+  package { 'gcc-gfortran':
+    ensure => present,
+  }
+
+  file { "/usr/share/Modules/modulefiles/openblas":
+    ensure => "directory"
+  }
+
+  file { "/usr/share/Modules/modulefiles/openblas/.version":
+    ensure => "present",
+    content => "#%Module1.0
+set ModulesVersion \"0.2.10\""
+  }
+
+  file { "/usr/share/Modules/modulefiles/openblas/0.2.10":
+    ensure => "present",
+    content => "#%Module1.0
+module-whatis   \"invoke openblas-0.2.10\"
+set             version         0.2.10
+set             app             openblas
+set             modroot         /apps/openblas-0.2.10/
+prepend-path    PATH            \$modroot/bin
+prepend-path    LD_LIBRARY_PATH \$modroot/lib"
+  }
+
+  file { "/usr/share/Modules/modulefiles/openmpi":
+    ensure => "directory"
+  }
+
+  file { "/usr/share/Modules/modulefiles/openmpi/.version":
+    ensure => "present",
+    content => "#%Module1.0
+set ModulesVersion \"1.7.5\""
+  }
+
+  file { "/usr/share/Modules/modulefiles/openmpi/1.7.5":
+    ensure => "present",
+    content => "#%Module1.0
+module-whatis   \"invoke openmpi-1.7.5\"
+set             version         1.7.5
+set             app             openmpi
+set             modroot         /apps/openmpi-1.7.5/
+prepend-path    PATH            \$modroot/bin
+prepend-path    LD_LIBRARY_PATH \$modroot/lib
+setenv          MPI_HOME        \$modroot
+setenv          CC              mpicc
+setenv          CXX             mpiCC
+setenv          F77             mpif77
+setenv          FC              mpif90\n"
+  }
+
+##### END
+
+}
+
+

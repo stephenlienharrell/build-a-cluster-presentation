@@ -1,0 +1,14 @@
+class base_cluster {
+
+#### START
+  account { 
+    'login_name_here':
+      home_dir => '/home/login_name_here',
+      groups   => [ 'wheel', 'users' ],
+      comment   => 'Full Name',
+      uid => 500,
+  }
+#### END
+
+}
+
