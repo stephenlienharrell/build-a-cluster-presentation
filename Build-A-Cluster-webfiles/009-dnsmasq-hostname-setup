@@ -3,7 +3,7 @@ class base_cluster {
 #### START
 
   # order of operations to prevent "no dns" race condition
-  Class['dnsmasq'] -> Class['resolv_conf'] -> Exec['set-hostname-to-dns']
+  Class['dnsmasq'] -> Class['resolv_conf']
 
   class { 'dnsmasq':
     interface         => 'lo',
@@ -32,7 +32,7 @@ class base_cluster {
   $computetwo_reverse = join([$iparray_comtwo[3], ".", $iparray_comtwo[2], ".", $iparray_comtwo[1], ".", $iparray_comtwo[0], ".in-addr.arpa."] ,'')
 
   dnsmasq::dnsserver { 'dns':
-    ip => '8.8.8.8',
+    ip => '192.168.1.5',
   }
 
   dnsmasq::address { "head.cluster":
@@ -69,14 +69,10 @@ class base_cluster {
 
   class { 'resolv_conf':
     nameservers => ['127.0.0.1'],
-    searchpath  => ['cluster'],
+    domainname  => 'cluster',
   }
 
-  # reset the hostname using our new dnsmasq names
-  exec { "set-hostname-to-dns":
-    # this sets the hostname to the dig name of the ip address on eth0 and without the period at the end
-    command => 'hostname $(dig +short -x `hostname -I` | sed "s/\.\+$//")',
-  }
+
 
 #### END
 

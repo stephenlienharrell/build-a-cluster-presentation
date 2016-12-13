@@ -9,6 +9,7 @@ ssh-keygen
 cp ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
 
 # Pull down the c program
+cd ~/
 wget http://web.rcac.purdue.edu/~sharrell/buildacluster/pi.c
 
 # check that the modules we need are available
@@ -25,5 +26,7 @@ mpicc pi.c -o pi
 
 # Execute the pi with mpiexec across the nodes (make sure to subsititue the correct path)
 # For short command you can drop -prefix and -machinefie, and add -np 2
+# When we run this program with mpiexec we will not see the initial output, 
+# so just input a number
 mpiexec -prefix /apps/openmpi-1.7.5/ -machinefile $PBS_NODEFILE /home/login_user/pi
 

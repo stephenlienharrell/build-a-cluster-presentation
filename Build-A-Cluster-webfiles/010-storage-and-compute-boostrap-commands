@@ -1,8 +1,11 @@
-# install puppet repository
-yum install -y http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
+# install puppet and its dependencies
+yum -y install http://yum.puppetlabs.com/el/6.0/products/x86_64/facter-1.7.6-1.el6.x86_64.rpm
+yum -y install http://yum.puppetlabs.com/el/6.0/dependencies/x86_64/ruby-augeas-0.4.1-3.el6.x86_64.rpm
+yum -y install http://yum.puppetlabs.com/el/6.0/dependencies/x86_64/ruby-shadow-2.2.0-2.el6.x86_64.rpm
+yum -y install http://yum.puppetlabs.com/el/6.0/products/x86_64/puppet-2.7.26-1.el6.noarch.rpm
 
-# install puppet, subversion and vim
-yum -y install puppet vim subversion
+# install subversion and vim
+yum -y install vim subversion
 
 # remove default puppet configs
 rm -rf /etc/puppet
@@ -13,10 +16,11 @@ svn co https://LOCAL_HEADNODE_IP/puppet /etc/puppet/
 # Flush iptables
 iptables -F
 
-# Add ip addresss for storagenodeip, shortname for storage node and reverse dns
-# for storage
-vim /etc/puppet/manifests/site.pp
-svn ci /etc/puppet/
+
+#Change the hostname of the storage or compute node node
+#NODENAME will be either storage, compute1 or compute2
+Run the command "hostname NODENAME.cluster"
+Add the line "NODE_IP NODENAME.cluster NODENAME" to /etc/hosts
 
 # apply the puppet configuration
 puppet apply /etc/puppet/manifests/site.pp

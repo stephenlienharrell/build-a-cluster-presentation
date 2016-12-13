@@ -27,4 +27,4 @@ vim bin/Linux_PII_CBLAS_gm/HPL.dat
 cd bin/Linux_PII_CBLAS_gm
 
 # run HPL (change the absolute path to match the proper login)
-mpiexec -prefix /apps/openmpi-1.7.5/ -np 2 -machinefile $PBS_NODEFILE /home/LOGIN_NAME_HERE/hpl/bin/Linux_PII_CBLAS_gm/xhpl
+mpiexec -prefix /apps/openmpi-1.7.5/ -machinefile $PBS_NODEFILE /home/LOGIN_NAME_HERE/hpl/bin/Linux_PII_CBLAS_gm/xhpl

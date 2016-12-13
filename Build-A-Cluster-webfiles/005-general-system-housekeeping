@@ -1,5 +1,5 @@
-
-#### START
+### TOP OF FILE
+#### START 
 Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ] }
 #### END
 
@@ -10,10 +10,6 @@ class base_cluster {
     path => '/etc/rc.d/rc.local',  
     ensure => present,
     line => '/usr/bin/puppet apply /etc/puppet/manifests/site.pp',
-  }
-
-  swap_file::files { 'default':
-    ensure   => present,
   }
 
   class { 'selinux':

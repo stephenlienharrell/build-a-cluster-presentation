@@ -1,8 +1,3 @@
-
-#### START
-$storagenodeip='storage node ip here'
-#### END
-
 class head_node {
 
 #### START

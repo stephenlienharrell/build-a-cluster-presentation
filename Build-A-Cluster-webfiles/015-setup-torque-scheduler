@@ -43,13 +43,13 @@ class head_node {
   service { "pbs_server":
 #    ensure  => "running",
     enable  => "false",
-    require => [Package["torque-server"], Exec["set-hostname-to-dns"], File['/var/spool/torque/checkpoint/']]
+    require => [Package["torque-server"], File['/var/spool/torque/checkpoint/']]
   }
 
   service { "maui.d":
 #    ensure  => "running",
     enable  => "false",
-    require => [Package["maui"], Exec["set-hostname-to-dns"]],
+    require => Package["maui"],
   }
 
   file { '/var/spool/torque/server_priv/nodes':
@@ -79,8 +79,8 @@ class compute_node {
   service { "pbs_mom":
     ensure  => "running",
     enable  => "true",
-    require => [Package["torque-client"], Exec["set-hostname-to-dns"]],
-    subscribe => [Exec["set-hostname-to-dns"], File["/var/spool/torque/server_name"]]
+    require => [Package["torque-client"]],
+    subscribe => [File["/var/spool/torque/server_name"]]
   }
 
   file { '/var/spool/torque/mom_priv/config':

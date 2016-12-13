@@ -1,5 +1,7 @@
-# Add headnode short hostname in definition 
-# node 'head.cluster', 'ip-172-31-26-98' { ... } /* This is the AWS internal hostname */
+#Change the hostname of the head node
+Run the command "hostname head.cluster"
+Add the line "HEAD_NODE_IP head.cluster cluster" to /etc/hosts
+
 
 # Puppet Apply
 puppet apply /etc/puppet/manifests/site.pp

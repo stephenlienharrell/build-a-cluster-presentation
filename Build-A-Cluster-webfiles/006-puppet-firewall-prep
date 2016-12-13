@@ -1,5 +1,8 @@
-# make new module for puppet firewall rules
+# make directory and file for new firewall module in puppet
+
 mkdir -p /etc/puppet/modules/my_fw/manifests
+touch /etc/puppet/modules/my_fw/manifests/init.pp
+svn add /etc/puppet/modules/my_fw/
 
 # flush iptables to prevent race condition
 iptables -F

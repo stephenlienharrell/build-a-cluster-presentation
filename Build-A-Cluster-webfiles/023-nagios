@@ -2,6 +2,9 @@ class head_node {
   ...
 
 ### BEGIN NAGIOS
+  package { 'epel-release.noarch':
+    ensure => 'present',
+  }
 
   package { ['nagios-common', 'nagios', 'nagios-plugins']:
     ensure => 'present',

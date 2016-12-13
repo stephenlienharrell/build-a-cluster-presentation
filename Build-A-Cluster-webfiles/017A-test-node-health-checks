@@ -1,11 +1,12 @@
 # Check to make sure both nodes are up
 pbsnodes -a
 
-# Unmount /apps on compute1.cluster
-umount /apps
-
 # Run a job using both nodes from the head node
 qsub -I -l nodes=2
 
-# See that one node has been taken offline
+# Unmount /apps on compute1.cluster
+umount /apps
+
+
+# See that one node has been taken offline after 45 seconds
 pbsnodes -a

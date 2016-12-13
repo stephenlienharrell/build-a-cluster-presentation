@@ -1,11 +1,14 @@
 # ssh into the node as root
-ssh -i AWSkey.pem root@public-AWS-IP
+ssh root@EAFIT-VM1-IP
 
-# install puppet repository
-yum -y install http://yum.puppetlabs.com/puppetlabs-release-el-6.noarch.rpm
+# install puppet and its dependencies
+yum -y install http://yum.puppetlabs.com/el/6.0/products/x86_64/facter-1.7.6-1.el6.x86_64.rpm
+yum -y install http://yum.puppetlabs.com/el/6.0/dependencies/x86_64/ruby-augeas-0.4.1-3.el6.x86_64.rpm
+yum -y install http://yum.puppetlabs.com/el/6.0/dependencies/x86_64/ruby-shadow-2.2.0-2.el6.x86_64.rpm
+yum -y install http://yum.puppetlabs.com/el/6.0/products/x86_64/puppet-2.7.26-1.el6.noarch.rpm
 
-# install puppet, git, subversion, apache with mod ssl and vim
-yum -y install puppet git mod_ssl vim subversion
+# install git, subversion, apache with mod ssl and vim
+yum -y install git mod_ssl vim subversion
 
 # create subversion repo and initialize puppet tree
 mkdir /var/svn
@@ -25,7 +28,7 @@ git clone https://github.com/haraldsk/puppet-module-nfs.git /etc/puppet/modules/
 # set editor then add and check in modules
 export EDITOR=vim
 svn add /etc/puppet/modules/*
-svn ci /etc/puppet
+svn ci /etc/puppet -m “Add new modules”
 
 # create, add, and check in directory for puppet configs
 mkdir /etc/puppet/manifests

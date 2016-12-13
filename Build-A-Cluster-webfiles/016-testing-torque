@@ -1,8 +1,0 @@
-# Make sure our compute nodes are free
-pbsnodes
-
-# Start an interactive job
-qsub -I
-
-# Start and interactive job with two nodes
-qsub -I -l nodes=2
