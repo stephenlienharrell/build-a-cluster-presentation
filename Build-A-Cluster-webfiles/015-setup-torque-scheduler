@@ -1,3 +1,5 @@
+## RPMS Built with this guide: http://blog.ajdecon.org/installing-the-maui-scheduler-with-torque-410/
+
 class base_cluster {
 
 #### START
@@ -12,36 +14,42 @@ class base_cluster {
     provider => 'rpm',
   }
 
+  file { '/var/spool/torque/server_name':
+    content => "head.cluster\n",
+    require => Package['torque'],
+  }
+
 #### END
 }
 
 class head_node {
 
 #### START
-  package { 'torque-scheduler':
-    ensure => 'installed',
-    source => 'http://web.rcac.purdue.edu/~sharrell/buildacluster/torque-scheduler-4.1.7-1.adaptive.el6.x86_64.rpm',
-    provider => 'rpm',
-    require => Package['torque']
-  }
-
   package { 'torque-server':
     ensure => 'installed',
     source => 'http://web.rcac.purdue.edu/~sharrell/buildacluster/torque-server-4.1.7-1.adaptive.el6.x86_64.rpm',
     provider => 'rpm',
-    require => [Package['torque'], File['/var/spool/torque/checkpoint']]
+    require => Package['torque']
   }
+
+  package { 'maui':
+    ensure => 'installed',
+    source => 'http://web.rcac.purdue.edu/~sharrell/buildacluster/maui-3.3.1-x86_64-fpmbuild.rpm',
+    provider => 'rpm',
+    require => Package['torque']
+  }
+
 
   service { "pbs_server":
 #    ensure  => "running",
-    enable  => "true",
-    require => Package["torque-server"],
+    enable  => "false",
+    require => [Package["torque-server"], Exec["set-hostname-to-dns"], File['/var/spool/torque/checkpoint/']]
   }
 
-  service { "pbs_sched":
+  service { "maui.d":
 #    ensure  => "running",
-    enable  => "true",
-    require => Package["torque-scheduler"],
+    enable  => "false",
+    require => [Package["maui"], Exec["set-hostname-to-dns"]],
   }
 
   file { '/var/spool/torque/server_priv/nodes':
@@ -52,7 +60,7 @@ class head_node {
 
   file { '/var/spool/torque/checkpoint/':
     ensure => 'directory',
-    recurse => true,
+    require => Package["torque-server"]
   }
 
 #### END
@@ -71,11 +79,12 @@ class compute_node {
   service { "pbs_mom":
     ensure  => "running",
     enable  => "true",
-    require => Package["torque-client"],
+    require => [Package["torque-client"], Exec["set-hostname-to-dns"]],
+    subscribe => [Exec["set-hostname-to-dns"], File["/var/spool/torque/server_name"]]
   }
 
   file { '/var/spool/torque/mom_priv/config':
-    content => "\$pbsserver head
+    content => "\$pbsserver head.cluster
 \$usecp *:/home /home\n",
     require => Package['torque-client'],
     notify  => Service["pbs_mom"]

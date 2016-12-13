@@ -1,6 +1,7 @@
 
 #### START
 # set ips for all machines in the cluster
+# don't forget to update headnode ip here
 $headnodeip='172.31.7.24'
 $storagenodeip='127.0.0.2'
 $computeoneip='127.0.0.3'

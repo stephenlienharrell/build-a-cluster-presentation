@@ -1,7 +1,6 @@
 class head_node {
 
-#### START
-
+#### START APACHE_CONFIG
   # setup apache module
   class { 'apache':
     default_confd_files => false,
@@ -27,7 +26,7 @@ class head_node {
       </Location>'
   }
 
-#### END
+#### END APACHE_CONFIG
 
 }
 

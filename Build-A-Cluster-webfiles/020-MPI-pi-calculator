@@ -24,5 +24,6 @@ mpicc pi.c -o pi
 ./pi
 
 # Execute the pi with mpiexec across the nodes (make sure to subsititue the correct path)
-mpiexec -prefix /apps/openmpi-1.7.5/ -machinefile $PBS_NODEFILE /home/sharrell/pi
+# For short command you can drop -prefix and -machinefie, and add -np 2
+mpiexec -prefix /apps/openmpi-1.7.5/ -machinefile $PBS_NODEFILE /home/login_user/pi
 

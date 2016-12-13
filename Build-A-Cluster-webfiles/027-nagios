@@ -1,0 +1,86 @@
+class head_node {
+  ...
+
+### BEGIN NAGIOS
+
+  package { ['nagios-common', 'nagios', 'nagios-plugins']:
+    ensure => 'present',
+    require => Package['epel-release.noarch'],
+  }
+
+  package { ['nagios-plugins-ssh', 'nagios-plugins-ping']:
+    ensure => 'present',
+    require => Package['nagios-plugins'],
+  }
+
+  exec { 'remove_locahost_conf':
+    command => 'mv /etc/nagios/objects/localhost.cfg /etc/nagios/objects/localhost.cfg.orig; touch /etc/nagios/objects/localhost.cfg',
+    require => Package['nagios'],
+  }
+
+  file { '/etc/nagios/conf.d/hosts.cfg':
+    ensure => file,
+    content => "
+                define host{
+                        use     linux-server
+                        host_name head.cluster
+                        alias   head
+                        address ${headnodeip}
+                }
+                define host{
+                        use     linux-server
+                        host_name storage.cluster
+                        alias   storage
+                        address ${storagenodeip}
+                }
+		define host{
+                        use     linux-server
+                        host_name compute1.cluster
+                        alias   compute1
+                        address ${computeoneip}
+                }
+                define host{
+                        use     linux-server
+                        host_name compute2.cluster
+                        alias   compute2
+                        address ${computetwoip}
+                }
+                define hostgroup{
+                        hostgroup_name  linux-servers
+                        alias           Linux Servers
+                        members         head.cluster, storage.cluster, compute1.cluster, compute2.cluster
+                }",
+    require => Package['nagios'],
+    notify => Service['nagios'],
+  }
+
+  file { '/etc/nagios/conf.d/services.cfg':
+    ensure => file,
+    content => "
+                define service{
+                        use             local-service
+                        hostgroup_name  linux-servers
+                        service_description PING
+                        check_command   check_ping!100.0,20%!500.0,60%
+                }
+                define service{
+                        use             local-service
+                        hostgroup_name  linux-servers
+                        service_description SSH
+                        check_command   check_ssh
+                        notifications_enabled 0
+                }",
+    require => [Package['nagios'], File['/etc/nagios/conf.d/hosts.cfg']],
+    notify => Service['nagios'],
+  }
+
+  service { "nagios":
+    ensure  => "running",
+    enable  => "true",
+    require => [Package["nagios"], File['/etc/nagios/conf.d/services.cfg']],
+  }
+
+### END NAGIOS
+
+
+}

@@ -8,7 +8,7 @@ yum -y install puppet vim subversion
 rm -rf /etc/puppet
 
 # checkout puppet svn to /etc/puppet
-svn co https://LOCAL_HEADNODE_IP/puppet /etc/
+svn co https://LOCAL_HEADNODE_IP/puppet /etc/puppet/
 
 # Flush iptables
 iptables -F

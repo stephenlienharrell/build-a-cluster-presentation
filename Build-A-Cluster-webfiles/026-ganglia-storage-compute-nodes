@@ -1,0 +1,38 @@
+class storage_node {
+  ...
+
+### BEGIN GANGLIA
+
+  file { '/etc/ganglia/gmond.conf':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///modules/my_configs/gmond-client.conf',
+    require => Package['ganglia-gmond'],
+    notify => Service['gmond'],
+  }
+
+### END
+
+}
+
+class compute_node {
+  ...
+
+### BEGIN GANGLIA
+
+  file { '/etc/ganglia/gmond.conf':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///modules/my_configs/gmond-client.conf',
+    require => Package['ganglia-gmond'],
+    notify => Service['gmond'],
+  }
+
+### END
+
+
+}

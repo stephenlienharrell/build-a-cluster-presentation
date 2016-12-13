@@ -1,0 +1,58 @@
+
+class head_node {
+  ...
+
+  ### BEGIN GANGLIA
+
+  package { 'ganglia-gmetad':
+    ensure => 'present',
+    require => Package['epel-release.noarch', 'ganglia']
+  }
+
+  package { 'ganglia-web':
+    ensure => 'present',
+    require => Package['epel-release.noarch', 'ganglia']
+  }
+
+  # default ganglia.conf is too restrictive. let's change it.
+  file { '/etc/httpd/conf.d/ganglia.conf':
+    ensure  => file,
+    content => '
+                Alias /ganglia /usr/share/ganglia
+                <Location /ganglia>
+                   Allow from all
+                </Location>',
+    require => Package['ganglia-web'],
+    notify => Service['httpd'],
+  }
+
+
+  file { '/etc/ganglia/gmond.conf':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///modules/my_configs/gmond-server.conf',
+    require => Package['ganglia-gmond'],
+    notify => Service['gmond'],
+  }
+
+  file { '/etc/ganglia/gmetad.conf':
+    ensure => file,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///modules/my_configs/gmetad-server.conf',
+    require => Package['ganglia-gmetad'],
+    notify => Service['gmetad'],
+  }
+
+  service { "gmetad":
+    ensure  => "running",
+    enable  => "true",
+    require => [Package["ganglia-gmetad"], Service["gmond"]],
+  }
+
+  ### END GANGLIA
+
+}

@@ -1,3 +1,5 @@
+# This all goes into the /etc/puppet/modules/my_fw/manifests/init.pp file
+
 class my_fw {
  
     $ipv4_file = $operatingsystem ? {

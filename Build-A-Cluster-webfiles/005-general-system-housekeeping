@@ -6,7 +6,15 @@ Exec { path => [ "/bin/", "/sbin/" , "/usr/bin/", "/usr/sbin/" ] }
 class base_cluster {
 
 #### START
-  include swap_file
+  file_line { 'puppet-apply-on-boot':
+    path => '/etc/rc.d/rc.local',  
+    ensure => present,
+    line => '/usr/bin/puppet apply /etc/puppet/manifests/site.pp',
+  }
+
+  swap_file::files { 'default':
+    ensure   => present,
+  }
 
   class { 'selinux':
     mode => 'permissive',

@@ -1,3 +1,9 @@
+# Add headnode short hostname in definition 
+# node 'head.cluster', 'ip-172-31-26-98' { ... } /* This is the AWS internal hostname */
+
+# Puppet Apply
+puppet apply /etc/puppet/manifests/site.pp
+
 # Allow HTTPD to access puppet repository in SELinux
 chcon -R -h -t httpd_sys_content_t /var/svn/puppet 
 

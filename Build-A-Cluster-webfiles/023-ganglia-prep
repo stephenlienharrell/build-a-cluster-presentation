@@ -1,0 +1,31 @@
+## On head_node
+
+## First create some same config files for Ganglia gmond and gmetad
+## we shall keep these in puppet/modules
+
+mkdir -p /etc/puppet/modules/my_configs/files
+
+## Now create the files gmond-server.conf, gmond-client.conf, 
+## and gmetad-server.conf in my_configs/files from the attached samples.
+## Give your cluster a cool name if you like. Remember to use the same 
+## cluster name in all three files
+cd /root/
+wget http://web.rcac.purdue.edu/~sharrell/buildacluster/023A-gmond-server-conf
+wget http://web.rcac.purdue.edu/~sharrell/buildacluster/023B-gmond-client-conf
+wget http://web.rcac.purdue.edu/~sharrell/buildacluster/023C-gmetad-server-conf
+
+# example
+# cp "0023A-gmond-server-conf" "/etc/puppet/modules/my_configs/files/gmond-server.conf" 
+cp "023A-gmond-server-conf" "/etc/puppet/modules/my_configs/files/gmond-server.conf"
+cp "023B-gmond-client-conf" "/etc/puppet/modules/my_configs/files/gmond-client.conf"
+cp "023C-gmetad-server-conf" "/etc/puppet/modules/my_configs/files/gmetad-server.conf"
+
+cd /etc/puppet
+svn stat  #shows all the newly created files
+svn add modules/my_configs
+
+svn ci -m "Added sample configs for Ganglia"
+
+## continue with editing site.pp
+
+## To see ganglia-web UI, enable port 443 in AWS Security Group policy

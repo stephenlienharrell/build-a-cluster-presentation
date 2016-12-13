@@ -1,0 +1,10 @@
+# If not done already add site.pp to svn
+cd /etc/puppet
+svn add manifests/site.pp
+
+# Add puppet repo changes in SVN
+export SVN_EDITOR=vim
+svn ci
+
+# Apply Puppet Changes
+puppet apply /etc/puppet/manifests/site.pp

@@ -1,5 +1,5 @@
 # download and untar hpl
-wget http://www.web.rcac.purdue.edu/~sharrell/buildacluster/hpl-2.1.tar.gz
+wget http://web.rcac.purdue.edu/~sharrell/buildacluster/hpl-2.1.tar.gz
 tar xfvz hpl-2.1.tar.gz
 mv hpl-2.1 hpl
 
@@ -23,5 +23,8 @@ make arch=Linux_PII_CBLAS_gm
 # 1 1 1 Qs
 vim bin/Linux_PII_CBLAS_gm/HPL.dat
 
+# go to the executable dir otherwise it won't find HPL.dat
+cd bin/Linux_PII_CBLAS_gm
+
 # run HPL (change the absolute path to match the proper login)
-mpiexec -prefix /apps/openmpi-1.7.5/ -np 2 -machinefile $PBS_NODEFILE /home/sharrell/hpl/bin/Linux_PII_CBLAS_gm/xhpl
+mpiexec -prefix /apps/openmpi-1.7.5/ -np 2 -machinefile $PBS_NODEFILE /home/LOGIN_NAME_HERE/hpl/bin/Linux_PII_CBLAS_gm/xhpl

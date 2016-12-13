@@ -3,7 +3,7 @@ cd /root/
 svn co https://localhost/puppet/
 
 # copy puppet installation into empty repository
-cp -R /etc/puppet/* /root/puppet/
+cp -R /etc/puppet/ /root/puppet/
 
 # add all of files to the repository and commit
 cd /root/puppet/
@@ -13,5 +13,4 @@ svn ci
 
 # remove /etc/puppet and replace it with version controled directory
 rm -rf /etc/puppet/
-cd /etc/
-svn co https://localhost/puppet
+svn co https://localhost/puppet/ /etc/

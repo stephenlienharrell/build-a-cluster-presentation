@@ -1,0 +1,23 @@
+# setup torque users and queues
+
+/etc/init.d/pbs_server stop
+
+/usr/share/doc/torque-server-4.1.7/torque.setup root
+
+# Allow pbsnodes to work on the nodes
+qmgr -c 'set server managers = root@*.cluster'
+
+# Change service "pbs_server" and "maui.d" stanza to uncomment ensure running
+# puppet apply
+# svn ci
+
+# testing torque
+
+# Make sure our compute nodes are free
+pbsnodes
+
+# Start an interactive job
+qsub -I
+
+# Start and interactive job with two nodes
+qsub -I -l nodes=2

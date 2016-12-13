@@ -6,7 +6,7 @@ class compute_node {
 
 ##### START
 \$node_check_script /usr/sbin/nhc
-\$node_check_interval jobstart
+\$node_check_interval 1
 \$down_on_error 1\n",
 ##### END
     require => Package['torque-client'],
@@ -22,6 +22,7 @@ class compute_node {
 
   file { '/etc/nhc/nhc.conf':
     content => "/./ || check_fs_mount_rw /
+ *  || check_fs_mount_rw /apps
  *  || check_ps_daemon sshd root\n
  *  || check_hw_physmem 1024 1073741824\n
  *  || check_hw_physmem_free 1\n",
