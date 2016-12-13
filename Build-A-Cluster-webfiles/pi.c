@@ -1,4 +1,4 @@
-// Stolen from:
+// This program is from:
 // http://www.mcs.anl.gov/research/projects/mpi/usingmpi/examples/simplempi/cpi_c.htm
 
 #include "mpi.h"
